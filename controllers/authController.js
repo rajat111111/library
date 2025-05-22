@@ -7,7 +7,7 @@ require('dotenv').config();
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, contactNo, address } = req.body;
         const existingUser = await User.findOne({ email });
         if (existingUser)
             return res
@@ -20,11 +20,12 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(password, salt);
 
-        const user = new User({ name, email, password: hashed, role });
+        const user = new User({ name, email, password: hashed, role, contactNo, address });
         await user.save();
 
         res.status(201)
             .json({
+                statusCode: 201,
                 status: "success",
                 message: 'User registered successfully'
             });
